@@ -1,5 +1,6 @@
 const express = require('express');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt-nodejs');
 const app = express();
 const PORT = 3000;
 
@@ -24,6 +25,13 @@ const tempDatabase = {
       joined: new Date(),
     },
   ],
+  login: [
+    {
+      id: '987',
+      hash: '',
+      email: 'john@gmail.com',
+    },
+  ],
 };
 
 app.get('/', (req, res) => {
@@ -43,6 +51,9 @@ app.post('/signin', (req, res) => {
 
 app.post('/register', (req, res) => {
   const { email, name, password } = req.body;
+  bcrypt.hash(password, null, null, function (err, hash) {
+    console.log(hash);
+  });
   tempDatabase.users.push({
     id: '125',
     name: name,
@@ -82,6 +93,18 @@ app.post('/image', (req, res) => {
     res.status(400).json('User not found');
   }
 });
+
+// bcrypt.hash('bacon', null, null, function (err, hash) {
+//   // Store hash in your password DB.
+// });
+
+// // Load hash from your password DB.
+// bcrypt.compare('bacon', hash, function (err, res) {
+//   // res == true
+// });
+// bcrypt.compare('veggies', hash, function (err, res) {
+//   // res = false
+// });
 
 app.listen(PORT, () => {
   console.log(`Live on port ${PORT}`);
